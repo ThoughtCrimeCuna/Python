@@ -1,0 +1,147 @@
+#Levi Peachey-Stoner
+#9/18/2020
+
+from random import randint
+import time
+
+print("You come across a monster guarding a great treasure")
+print("The Monster says,")
+print('"I have many teeth, If you guess how many I will give you my treasure,')
+print('if not I will eat you. You have 5 turns.')
+playing=True
+while playing !="y":
+    playing=input('"Will you play my game?"(y/n)').lower()
+    if playing=="n":
+        print("Fine then go away, I'll have to find something else to eat.")
+        time.sleep(2)
+        quit()
+    elif playing!="y":
+        print('"I only know two letters buddy, are you trying to get on my nerves?"')
+
+localhigh=0
+
+def score_engine(): #I'm glad I went to sleep instead of trying to finish this while tired
+    try:
+        with open("nummonscore.txt","r") as f:
+            pass
+    except IOError:
+        with open("nummonscore.txt","w") as f:
+            f.write('Noone:0\nNotwo:0\nNothree:0')
+            
+    '''
+    I could have probably done some sort of loop, or found another way to be
+    efficient here but it helped me think through it to have lots of variables.
+    When I was testing I printed just about every bit of information I could, some
+    of that is still visable.
+    '''
+
+    with open("nummonscore.txt","r+") as f: 
+        global localhigh
+        scores = f.read()
+        #print(scores)
+        highs = scores.split("\n")
+        #print(highs)
+        score1=str(highs[0:1])
+        score2=str(highs[1:2])
+        score3=str(highs[2:3])
+        #print(score1+"then"+score2+"and then"+score3)
+        lowscore1=int(score1[-3:-2])
+        lowscore2=int(score2[-3:-2])
+        lowscore3=int(score3[-3:-2])
+        hiscore1=0
+        hiscore2=0
+        hiscore3=0
+
+#this is where the magic happens"
+
+        if lowscore1 < localhigh:
+            hiscore1=max(lowscore1,localhigh)
+            print("NEW HIGH SCORE")
+            score1=score1.replace(score1[2:-4],input("YOUR NAME HERE:"))
+            score1=score1.replace(score1[-3:-2],str(hiscore1))
+            localhigh=0
+        elif lowscore2 < localhigh:
+            hiscore2=max(lowscore2,localhigh)
+            print("NEW HIGH SCORE")
+            score2=score2.replace(score2[2:-4],input("YOUR NAME HERE:"))
+            score2=score2.replace(score2[-3:-2],str(hiscore2))
+            localhigh=0
+        elif lowscore3 <= localhigh:
+            hiscore3=max(lowscore3,localhigh)
+            print("NEW HIGH SCORE")
+            score3=score3.replace(score3[2:-4],input("YOUR NAME HERE:"))
+            score3=score3.replace(score3[-3:-2],str(hiscore3))
+            localhigh=0
+        else:
+            pass
+
+        print("The high scores on the computer are currently:")
+        print(score1,score2,score3)
+
+        scores = score1[2:-2]+'\n'+score2[2:-2]+'\n'+score3[2:-2]
+    
+        with open("nummonscore.txt","w") as f:
+            f.write(scores)
+
+
+
+
+def monster():
+    global gold
+    global turns
+    global teeth
+    global localhigh
+    gold=False
+    turns=5
+    teeth=randint(1,100)
+    #print(teeth) #for testing or cheating
+    def guessing(x):
+        try:
+            x=int(x)
+            if x == teeth:
+                print('"Well drat, You\'re right I have',teeth,'teeth"')
+                global gold
+                gold=True
+            elif x > teeth:
+                global turns
+                turns=turns-1
+                print('"I wish I had that many," says the monster. You have',turns, "more turns.")
+            elif x < teeth:
+                turns=turns-1
+                print('"Too low," the monster draws closer. You have',turns, 'more turns.')
+        except ValueError:
+            print("Please stop, I'm illiterate and you're hurting my feelings.")
+        except:
+            print('"The monster is confused"') #just for fun... I don't think it can currently activate
+
+
+    while turns>0 and gold==False:
+        guessing((input('How many teeth do I have?')))
+
+    if turns<=0:
+        print("You are divoured by the monster, you are chewed up by their",teeth,"teeth. The monster rates the meal",randint(1,10),"out of 10.")
+
+    if gold==True:
+        print('"Ok fine, take the treasure..." You had',turns,'turns left. Your best was',localhigh,'turns left.')
+        if localhigh<turns:
+            print("PERSONAL HIGH SCORE!")
+        localhigh=max(turns,localhigh)
+        score_engine()
+
+    gold=False
+    turns=5
+    
+    replay=input('"Oh look another adventurer, do you want to play again?"(y/n)').lower()
+    if replay=="n":
+        print("Come back when you feel like getting eaten.")
+        time.sleep(2)
+        quit()
+    elif replay!="y":
+        print('"I don\'t know what that means"')
+    else:
+        monster()
+
+monster()
+
+# over all I think I could have definitely had fewer variables, made things clearer, made prettier code overall, but it works!
+# I made this as an assignment in an intro to coding class
