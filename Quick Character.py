@@ -1,4 +1,5 @@
-#Quick Character
+Levi Peachey-Stoner
+#Quick Character for Dungeons and Dragons
 
 import random
 
